@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
+import Sidebar from "../../components/Sidebar";
 
 function VoucherDetails() {
     const { id } = useParams();
@@ -9,7 +10,7 @@ function VoucherDetails() {
     const navigate = useNavigate();
 
     const [voucher, setVoucher] = useState(null);
-    const [signature, setSignature] = useState("");
+    const [signature, setSignature] = useState(null);
     const [rejectionReason, setRejectionReason] = useState("");
 
     const fetchVoucher = async () => {
@@ -33,36 +34,51 @@ function VoucherDetails() {
         fetchVoucher();
     }, [id, token]);
 
-    const handleApprove = async () => {
-        if (!signature.trim()) {
-            alert("Director signature is required");
-            return;
-        }
+    const formatDate = (date) => {
+        if (!date) return "-";
 
-        try {
-            await api.post(
-                `/vouchers/${id}/approve`,
-                {
-                    directorSignature: signature
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+        const [year, month, day] = date
+            .split("T")[0]
+            .split("-");
 
-            alert("Voucher approved successfully");
-
-            navigate("/director/pending");
-        } catch (error) {
-            alert(
-                error.response?.data?.message ||
-                "Failed to approve voucher"
-            );
-        }
+        return `${day}-${month}-${year}`;
     };
 
+    const handleApprove = async () => {
+    if (!signature) {
+        alert("Director signature image is required");
+        return;
+    }
+
+    try {
+        const data = new FormData();
+
+        data.append("directorSignature", signature);
+
+        await api.post(
+            `/vouchers/${id}/approve`,
+            data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        alert("Voucher approved successfully");
+        navigate("/director/pending");
+    } catch (error) {
+        console.error(
+            "Failed to approve voucher:",
+            error.response?.data || error.message
+        );
+
+        alert(
+            error.response?.data?.message ||
+            "Failed to approve voucher"
+        );
+    }
+};
     const handleReject = async () => {
         if (!rejectionReason.trim()) {
             alert("Rejection reason is required");
@@ -94,99 +110,155 @@ function VoucherDetails() {
     };
 
     if (!voucher) {
-        return <p>Loading...</p>;
+        return (
+            <div>
+                <Sidebar />
+
+                <main>
+                    <p>Loading...</p>
+                </main>
+            </div>
+        );
     }
 
     return (
         <div>
-            <h1>Review Voucher</h1>
+            <Sidebar />
 
-            <p>
-                <strong>Voucher Number:</strong>{" "}
-                {voucher.voucher_number}
-            </p>
+            <main>
+                <h1>Review Voucher</h1>
 
-            <p>
-                <strong>Voucher Date:</strong>{" "}
-                {voucher.voucher_date}
-            </p>
+                <div className="details-card">
+                    <table className="details-table">
+                        <tbody>
+                            <tr>
+                                <th>Voucher Number</th>
+                                <td>{voucher.voucher_number}</td>
+                            </tr>
 
-            <p>
-                <strong>Expense Date:</strong>{" "}
-                {voucher.expense_date}
-            </p>
+                            <tr>
+                                <th>Voucher Date</th>
+                                <td>
+                                    {formatDate(voucher.voucher_date)}
+                                </td>
+                            </tr>
 
-            <p>
-                <strong>Department:</strong>{" "}
-                {voucher.department}
-            </p>
+                            <tr>
+                                <th>Expense Date</th>
+                                <td>
+                                    {formatDate(voucher.expense_date)}
+                                </td>
+                            </tr>
 
-            <p>
-                <strong>Expense Title:</strong>{" "}
-                {voucher.expense_title}
-            </p>
+                            <tr>
+                                <th>Department</th>
+                                <td>{voucher.department}</td>
+                            </tr>
 
-            <p>
-                <strong>Category:</strong>{" "}
-                {voucher.expense_category}
-            </p>
+                            <tr>
+                                <th>Expense Title</th>
+                                <td>{voucher.expense_title}</td>
+                            </tr>
 
-            <p>
-                <strong>Description:</strong>{" "}
-                {voucher.expense_description}
-            </p>
+                            <tr>
+                                <th>Category</th>
+                                <td>
+                                    {voucher.expense_category || "-"}
+                                </td>
+                            </tr>
 
-            <p>
-                <strong>Amount:</strong>{" "}
-                ₹{voucher.amount}
-            </p>
+                            <tr>
+                                <th>Description</th>
+                                <td>
+                                    {voucher.expense_description || "-"}
+                                </td>
+                            </tr>
 
-            <p>
-                <strong>Employee Signature:</strong>{" "}
-                {voucher.employee_signature}
-            </p>
+                            <tr>
+                                <th>Amount</th>
+                                <td>₹{voucher.amount}</td>
+                            </tr>
 
-            <p>
-                <strong>Status:</strong>{" "}
-                {voucher.status}
-            </p>
+                            <tr>
+                                <th>Employee Signature</th>
+                                <td>
+                                    {voucher.employee_signature || "-"}
+                                </td>
+                            </tr>
 
-            {voucher.status === "SUBMITTED" && (
-                <div>
-                    <hr />
+                            <tr>
+                                <th>Status</th>
+                                <td>{voucher.status}</td>
+                            </tr>
 
-                    <h2>Approve Voucher</h2>
+                            {voucher.rejection_reason && (
+                                <tr>
+                                    <th>Rejection Reason</th>
+                                    <td>{voucher.rejection_reason}</td>
+                                </tr>
+                            )}
 
-                    <input
-                        type="text"
-                        placeholder="Director signature"
-                        value={signature}
-                        onChange={(e) =>
-                            setSignature(e.target.value)
-                        }
-                    />
+                            {voucher.director_signature && (
+    <tr>
+        <th>Director Signature</th>
+        <td>
+            <img
+                src={`http://localhost:5001/uploads/${voucher.director_signature}`}
+                alt="Director signature"
+                className="signature-image"
+            />
+        </td>
+    </tr>
+)}
+                        </tbody>
+                    </table>
 
-                    <button onClick={handleApprove}>
-                        Approve
-                    </button>
+                    {voucher.status === "SUBMITTED" && (
+                        <div className="approval-section">
+                            <h2>Approve Voucher</h2>
 
-                    <hr />
+                            <div>
+                                <label>Director Signature</label>
+                                <p className="input-help"> Upload your signature as a PNG or JPG image.</p>
+                                <input
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg"
+                                    onChange={(e) => setSignature(e.target.files[0])}
+                                />
+                            </div>
 
-                    <h2>Reject Voucher</h2>
+                            <div className="action-row">
+                                <button onClick={handleApprove}>
+                                    Approve
+                                </button>
+                            </div>
 
-                    <textarea
-                        placeholder="Reason for rejection"
-                        value={rejectionReason}
-                        onChange={(e) =>
-                            setRejectionReason(e.target.value)
-                        }
-                    />
+                            <h2>Reject Voucher</h2>
 
-                    <button onClick={handleReject}>
-                        Reject
-                    </button>
+                            <div>
+                                <label>Rejection Reason</label>
+
+                                <textarea
+                                    placeholder="Enter reason for rejection"
+                                    value={rejectionReason}
+                                    onChange={(e) =>
+                                        setRejectionReason(e.target.value)
+                                    }
+                                />
+                            </div>
+
+                            <div className="action-row">
+                                <button
+                                    className="button-danger"
+                                    onClick={handleReject}
+                                >
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
-            )}
+            </main>
         </div>
     );
 }

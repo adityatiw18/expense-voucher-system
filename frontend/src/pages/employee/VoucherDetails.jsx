@@ -10,7 +10,13 @@ function VoucherDetails() {
     const navigate = useNavigate();
 
     const [voucher, setVoucher] = useState(null);
+    const formatDate = (date) => {
+    if (!date) return "-";
 
+    const [year, month, day] = date.split("T")[0].split("-");
+
+    return `${day}-${month}-${year}`;
+};
     const fetchVoucher = async () => {
         try {
             const response = await api.get(`/vouchers/${id}`, {
@@ -87,66 +93,76 @@ function VoucherDetails() {
     }
 
     return (
-        <div>
-            <Sidebar />
+    <div>
+        <Sidebar />
 
-            <main>
-                <h1>Voucher Details</h1>
+        <main>
+            <h1>Voucher Details</h1>
 
-                <p>
-                    <strong>Voucher Number:</strong>{" "}
-                    {voucher.voucher_number}
-                </p>
+            <div className="details-card">
+                <table className="details-table">
+                    <tbody>
+                        <tr>
+                            <th>Voucher Number</th>
+                            <td>{voucher.voucher_number}</td>
+                        </tr>
 
-                <p>
-                    <strong>Voucher Date:</strong>{" "}
-                    {voucher.voucher_date}
-                </p>
+                        <tr>
+                            <th>Voucher Date</th>
+                            <td>{formatDate(voucher.voucher_date)}</td>
+                        </tr>
 
-                <p>
-                    <strong>Expense Date:</strong>{" "}
-                    {voucher.expense_date}
-                </p>
+                        <tr>
+                            <th>Expense Date</th>
+                            <td>{formatDate(voucher.expense_date)}</td>
+                        </tr>
 
-                <p>
-                    <strong>Department:</strong>{" "}
-                    {voucher.department}
-                </p>
+                        <tr>
+                            <th>Department</th>
+                            <td>{voucher.department}</td>
+                        </tr>
 
-                <p>
-                    <strong>Expense Title:</strong>{" "}
-                    {voucher.expense_title}
-                </p>
+                        <tr>
+                            <th>Expense Title</th>
+                            <td>{voucher.expense_title}</td>
+                        </tr>
 
-                <p>
-                    <strong>Category:</strong>{" "}
-                    {voucher.expense_category}
-                </p>
+                        <tr>
+                            <th>Category</th>
+                            <td>{voucher.expense_category || "-"}</td>
+                        </tr>
 
-                <p>
-                    <strong>Description:</strong>{" "}
-                    {voucher.expense_description}
-                </p>
+                        <tr>
+                            <th>Description</th>
+                            <td>{voucher.expense_description || "-"}</td>
+                        </tr>
 
-                <p>
-                    <strong>Amount:</strong>{" "}
-                    ₹{voucher.amount}
-                </p>
+                        <tr>
+                            <th>Amount</th>
+                            <td>₹{voucher.amount}</td>
+                        </tr>
 
-                <p>
-                    <strong>Status:</strong>{" "}
-                    {voucher.status}
-                </p>
+                        <tr>
+                            <th>Employee Signature</th>
+                            <td>{voucher.employee_signature || "-"}</td>
+                        </tr>
 
-                {voucher.rejection_reason && (
-                    <p>
-                        <strong>Rejection Reason:</strong>{" "}
-                        {voucher.rejection_reason}
-                    </p>
-                )}
+                        <tr>
+                            <th>Status</th>
+                            <td>{voucher.status}</td>
+                        </tr>
+
+                        {voucher.rejection_reason && (
+                            <tr>
+                                <th>Rejection Reason</th>
+                                <td>{voucher.rejection_reason}</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
 
                 {voucher.status === "DRAFT" && (
-                    <div>
+                    <div className="action-row">
                         <button
                             onClick={() =>
                                 navigate(`/employee/vouchers/${id}/edit`)
@@ -155,7 +171,10 @@ function VoucherDetails() {
                             Edit
                         </button>
 
-                        <button onClick={handleDelete}>
+                        <button
+                            className="button-danger"
+                            onClick={handleDelete}
+                        >
                             Delete
                         </button>
 
@@ -164,9 +183,10 @@ function VoucherDetails() {
                         </button>
                     </div>
                 )}
-            </main>
-        </div>
-    );
+            </div>
+        </main>
+    </div>
+);
 }
 
 export default VoucherDetails;

@@ -35,12 +35,17 @@ function MyVouchers() {
             <Sidebar />
 
             <main>
-                <h1>My Vouchers</h1>
+                <div
+    style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "28px"
+    }}
+>
+    <h1 style={{ margin: 0 }}>My Vouchers</h1>
 
-                <Link to="/employee/create">
-                    <button>Create Voucher</button>
-                </Link>
-
+</div>
                 {vouchers.length === 0 ? (
                     <p>No vouchers found.</p>
                 ) : (
@@ -75,6 +80,12 @@ function MyVouchers() {
                         </tbody>
                     </table>
                 )}
+
+<div style={{ marginTop: "28px" }}>
+    <Link to="/employee/create">
+        <button>Create Voucher</button>
+    </Link>
+</div>
             </main>
         </div>
     );

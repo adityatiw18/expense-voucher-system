@@ -55,6 +55,7 @@ router.post(
     "/:id/approve",
     authMiddleware,
     roleMiddleware("DIRECTOR"),
+    upload.single("directorSignature"),
     approveVoucher
 );
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
+import Sidebar from "../../components/Sidebar";
 
 function CreateVoucher() {
     const { token } = useAuth();
@@ -62,109 +63,126 @@ function CreateVoucher() {
 
     return (
         <div>
-            <h1>Create Voucher</h1>
+            <Sidebar />
 
-            <form onSubmit={handleSubmit}>
+            <main>
+                <h1>Create Voucher</h1>
 
-                <div>
-                    <label>Voucher Date</label>
-                    <input
-                        type="date"
-                        name="voucherDate"
-                        value={formData.voucherDate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                <p style={{ color: "#8F857D" }}>
+                    Create a new expense voucher and save it as a draft.
+                </p>
 
-                <div>
-                    <label>Expense Date</label>
-                    <input
-                        type="date"
-                        name="expenseDate"
-                        value={formData.expenseDate}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                <form onSubmit={handleSubmit}>
 
-                <div>
-                    <label>Department</label>
-                    <input
-                        type="text"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                    <h2>Voucher Information</h2>
 
-                <div>
-                    <label>Expense Title</label>
-                    <input
-                        type="text"
-                        name="expenseTitle"
-                        value={formData.expenseTitle}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                    <div>
+                        <label>Voucher Date</label>
+                        <input
+                            type="date"
+                            name="voucherDate"
+                            value={formData.voucherDate}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label>Expense Category</label>
-                    <input
-                        type="text"
-                        name="expenseCategory"
-                        value={formData.expenseCategory}
-                        onChange={handleChange}
-                    />
-                </div>
+                    <div>
+                        <label>Expense Date</label>
+                        <input
+                            type="date"
+                            name="expenseDate"
+                            value={formData.expenseDate}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label>Description</label>
-                    <textarea
-                        name="expenseDescription"
-                        value={formData.expenseDescription}
-                        onChange={handleChange}
-                    />
-                </div>
+                    <div>
+                        <label>Department</label>
+                        <input
+                            type="text"
+                            name="department"
+                            value={formData.department}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label>Amount</label>
-                    <input
-                        type="number"
-                        name="amount"
-                        value={formData.amount}
-                        onChange={handleChange}
-                        min="0"
-                        step="0.01"
-                        required
-                    />
-                </div>
+                    <h2>Expense Details</h2>
 
-                <div>
-                    <label>Employee Signature</label>
-                    <input
-                        type="text"
-                        name="employeeSignature"
-                        value={formData.employeeSignature}
-                        onChange={handleChange}
-                    />
-                </div>
+                    <div>
+                        <label>Expense Title</label>
+                        <input
+                            type="text"
+                            name="expenseTitle"
+                            value={formData.expenseTitle}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
 
-                <div>
-                    <label>Supporting Document</label>
-                    <input
-                        type="file"
-                        onChange={(e) => setDocument(e.target.files[0])}
-                    />
-                </div>
+                    <div>
+                        <label>Expense Category</label>
+                        <input
+                            type="text"
+                            name="expenseCategory"
+                            value={formData.expenseCategory}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-                <button type="submit">
-                    Save as Draft
-                </button>
+                    <div>
+                        <label>Description</label>
+                        <textarea
+                            name="expenseDescription"
+                            value={formData.expenseDescription}
+                            onChange={handleChange}
+                        />
+                    </div>
 
-            </form>
+                    <div>
+                        <label>Amount</label>
+                        <input
+                            type="number"
+                            name="amount"
+                            value={formData.amount}
+                            onChange={handleChange}
+                            min="0"
+                            step="0.01"
+                            required
+                        />
+                    </div>
+
+                    <h2>Supporting Information</h2>
+
+                    <div>
+                        <label>Employee Signature</label>
+                        <input
+                            type="text"
+                            name="employeeSignature"
+                            value={formData.employeeSignature}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div>
+                        <label>Supporting Document</label>
+                        <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) =>
+                                setDocument(e.target.files[0])
+                            }
+                        />
+                    </div>
+
+                    <button type="submit">
+                        Save as Draft
+                    </button>
+
+                </form>
+            </main>
         </div>
     );
 }

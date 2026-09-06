@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import Sidebar from "../../components/Sidebar";
-import { Link } from "react-router-dom";
 
 function AllVouchers() {
     const { token } = useAuth();
@@ -53,7 +53,11 @@ function AllVouchers() {
             departmentFilter === "ALL" ||
             voucher.department === departmentFilter;
 
-        return matchesSearch && matchesStatus && matchesDepartment;
+        return (
+            matchesSearch &&
+            matchesStatus &&
+            matchesDepartment
+        );
     });
 
     return (
@@ -64,7 +68,8 @@ function AllVouchers() {
                 <h1>All Vouchers</h1>
 
                 <p>
-                    View and process expense vouchers across the organization.
+                    View all expense vouchers across the organization,
+                    including their current approval status.
                 </p>
 
                 <div
@@ -76,12 +81,8 @@ function AllVouchers() {
                     }}
                 >
                     <div>
-                        <label htmlFor="search">
-                            Search Vouchers
-                        </label>
-
+                        <label>Search Vouchers</label>
                         <input
-                            id="search"
                             type="text"
                             placeholder="Search by voucher number, expense or department..."
                             value={search}
@@ -90,12 +91,8 @@ function AllVouchers() {
                     </div>
 
                     <div>
-                        <label htmlFor="status">
-                            Status
-                        </label>
-
+                        <label>Status</label>
                         <select
-                            id="status"
                             value={statusFilter}
                             onChange={(e) =>
                                 setStatusFilter(e.target.value)
@@ -110,20 +107,14 @@ function AllVouchers() {
                     </div>
 
                     <div>
-                        <label htmlFor="department">
-                            Department
-                        </label>
-
+                        <label>Department</label>
                         <select
-                            id="department"
                             value={departmentFilter}
                             onChange={(e) =>
                                 setDepartmentFilter(e.target.value)
                             }
                         >
-                            <option value="ALL">
-                                All Departments
-                            </option>
+                            <option value="ALL">All Departments</option>
 
                             {departments.map((department) => (
                                 <option
@@ -137,9 +128,7 @@ function AllVouchers() {
                     </div>
                 </div>
 
-                {vouchers.length === 0 ? (
-                    <p>No vouchers found.</p>
-                ) : filteredVouchers.length === 0 ? (
+                {filteredVouchers.length === 0 ? (
                     <p>No vouchers match your search or filters.</p>
                 ) : (
                     <table>
@@ -163,9 +152,11 @@ function AllVouchers() {
                                     <td>₹{voucher.amount}</td>
                                     <td>{voucher.status}</td>
                                     <td>
-                                    <Link to={`/accounts/vouchers/${voucher.id}`}>
-                                    View
-                                    </Link>
+                                        <Link
+                                            to={`/director/vouchers/${voucher.id}`}
+                                        >
+                                            View
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

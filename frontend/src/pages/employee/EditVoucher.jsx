@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
+import Sidebar from "../../components/Sidebar";
 
 function EditVoucher() {
     const { id } = useParams();
@@ -82,7 +83,10 @@ function EditVoucher() {
     };
 
     return (
-        <div>
+    <div>
+        <Sidebar />
+
+        <main>
             <h1>Edit Voucher</h1>
 
             <form onSubmit={handleSubmit}>
@@ -174,8 +178,9 @@ function EditVoucher() {
                 </button>
 
             </form>
-        </div>
-    );
+        </main>
+    </div>
+);
 }
 
 export default EditVoucher;

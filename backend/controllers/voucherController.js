@@ -163,9 +163,19 @@ const getPendingVouchers = async (req, res) => {
 
 const approveVoucher = async (req, res) => {
     try {
+        const { id } = req.params;
+
+        if (!req.file) {
+            return res.status(400).json({
+                message: "Director signature image is required"
+            });
+        }
+
+        const directorSignature = req.file.filename;
+
         const voucher = await voucherService.approveVoucher(
-            req.params.id,
-            req.body.directorSignature
+            id,
+            directorSignature
         );
 
         res.json({
@@ -173,13 +183,9 @@ const approveVoucher = async (req, res) => {
             voucher
         });
     } catch (error) {
-        const status =
-            error.message === "Voucher not found" ? 404 :
-            error.message === "Only submitted vouchers can be approved" ? 400 :
-            error.message === "Director signature is required" ? 400 :
-            500;
+        console.error(error);
 
-        res.status(status).json({
+        res.status(400).json({
             message: error.message
         });
     }

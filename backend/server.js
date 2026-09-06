@@ -1,18 +1,16 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const userModel = require("./models/userModel");
+const path = require("path");
 const authRoutes = require("./routes/authRoutes");
 const pool = require("./config/database");
-const bcrypt = require("bcrypt");
 const app = express();
-const authMiddleware = require("./middleware/authMiddleware");
-const roleMiddleware = require("./middleware/roleMiddleware");
 const voucherRoutes = require("./routes/voucherRoutes");
 const errorMiddleware = require("./middleware/errorMiddleware");
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/api/health", async (req, res) => {
     try {

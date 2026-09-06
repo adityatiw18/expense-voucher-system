@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 function VoucherTable({ vouchers }) {
+    const navigate = useNavigate();
+
     return (
         <table>
             <thead>
@@ -12,7 +16,13 @@ function VoucherTable({ vouchers }) {
 
             <tbody>
                 {vouchers.map((voucher) => (
-                    <tr key={voucher.id}>
+                    <tr
+                        key={voucher.id}
+                        className="clickable-row"
+                        onClick={() =>
+                            navigate(`/employee/vouchers/${voucher.id}`)
+                        }
+                    >
                         <td>{voucher.voucher_number}</td>
                         <td>{voucher.expense_title}</td>
                         <td>₹{voucher.amount}</td>
