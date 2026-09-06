@@ -375,7 +375,7 @@ cp backend/.env.example backend/.env
 The current backend requires:
 
 ```env
-JWT_SECRET=replace_with_a_secure_secret
+JWT_SECRET=my-super-secret-key
 ```
 
 Do not commit `.env`.
