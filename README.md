@@ -396,10 +396,9 @@ Recommended screenshots:
 2. Create Voucher
 3. Employee Voucher Details
 4. Director Pending Approvals
-5. Director Approval + Signature Upload
-6. Director Rejection
-7. Accounts All Vouchers
-8. Accounts Voucher Details with uploaded document/signature
+5. Director Approval + Signature Upload + Director Rejection
+6. Accounts All Vouchers
+7. Accounts Voucher Details with uploaded document/signature
 
 For the submission email, provide the GitHub repository link and mention that the documentation/screenshots are included in the repository. Only attach screenshots directly if the evaluator specifically requests attachments.
 
